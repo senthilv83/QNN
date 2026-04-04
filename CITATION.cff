@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Vijayakumar"
+  given-names: "Senthilkumar"
+  orcid: "https://orcid.org/0009-0009-6436-9003"
+  email: "senthilkumar.vb@gmail.com"
+  affiliation: "IEEE Senior Member"
+title: "Quantum Neural Networks for High-Dimensional Genomic Pattern Detection in Personalized Medicine"
+version: 1.0.0
+date-released: 2026-04-04
+url: "https://github.com/senthilv83/QNN"
+keywords:
+  - Quantum Neural Networks
+  - QNN
+  - Genomic Pattern Detection
+  - Personalized Medicine
+  - Quantum Computing
+  - Bioinformatics
+  - PennyLane
+  - PyTorch
+abstract: "This project introduces Quantum Neural Networks (QNNs) to analyze genomic data for personalized medicine. By leveraging quantum computation, the framework detects complex patterns in genetic variants to predict disease risks, drug responses, and optimal treatment paths, overcoming the high-dimensional complexity of genomic pattern recognition that classical neural networks struggle to handle efficiently."
