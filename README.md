@@ -72,3 +72,49 @@ If you utilize this framework or code in your research, please use the following
 }
 ```
 *(See `CITATION.cff` for more details).*
+
+## 📓 Notebook Cell-by-Cell Technical Walkthrough (`QNNGPD.ipynb`)
+
+### Cells 1-3: Project Initialization & Motivation
+*   **Overview:** Sets up the interactive environment and introduces the conceptual framework of Quantum Neural Networks (QNNs) for Genomic Pattern Detection.
+*   **Focus:** Highlights the necessity of using QNNs to overcome classical computing bottlenecks when processing high-dimensional genetic variants for personalized medicine.
+
+### Cell 4: Environment Setup & Dependencies
+*   **Package Installation:** Installs a robust stack of Machine Learning, Deep Learning, and Quantum computation libraries.
+*   **Key Libraries:** `pennylane` (Quantum circuits), `torch` (Deep Learning), `scikit-learn` & `skorch` (Classical ML and tuning), `openvino-dev` & `onnx` (Model compilation and edge inference), `pandas` & `numpy` (Data manipulation).
+
+### Cell 5: Genomic Data Ingestion
+*   **Data Loading:** Uses `pandas` to read the genomic dataset (e.g., `a.csv`).
+*   **Error Handling:** Implements `on_bad_lines='skip'` to robustly bypass malformed genomic sequence rows, ensuring continuous pipeline execution without crashing.
+
+### Cell 6: Data Standardization
+*   **Feature Scaling:** Applies Scikit-learn's `StandardScaler` to normalize the raw genetic features.
+*   **Statistical Importance:** Forces zero mean and unit variance across the dataset, which is a strict mathematical prerequisite for the stability and convergence speed of gradient descent in the neural network.
+
+### Cell 7: Dimensionality Reduction (PCA)
+*   **Principal Component Analysis:** Fits and applies PCA to the normalized dataset.
+*   **Variance Retention:** Configured with a strict `0.99` threshold to retain 99% of the explained variance while aggressively discarding noise.
+*   **Optimization Strategy:** Radically reduces the input vector size, making subsequent quantum and classical computations mathematically tractable and memory-efficient.
+
+### Cell 8: Neural Network Architecture & Data Splitting
+*   **Train/Test Split:** Partitions the reduced genomic dataset into training and out-of-sample testing sets.
+*   **PyTorch Model (`SNPClassifier`):** Defines a feed-forward Deep Neural Network using `nn.Sequential`.
+*   **Layer Composition:** Utilizes `Linear` fully connected layers, `ReLU` activations for non-linearity, `Dropout` for regularization (preventing overfitting on sparse genomic data), and `Sigmoid` for binary classification outputs (e.g., disease risk prediction).
+
+### Cell 9: Hyperparameter Tuning (GridSearchCV & Skorch)
+*   **Skorch Wrapper:** Wraps the PyTorch `SNPClassifier` into a `NeuralNetClassifier`, establishing direct compatibility with the Scikit-learn API.
+*   **Grid Search:** Iterates through arrays of hyperparameters (e.g., learning rates, epochs, dropout rates) using `GridSearchCV`.
+*   **Automated Cross-Validation:** Programmatically identifies the most optimal architectural weights and learning configurations tailored to the specific genomic dataset.
+
+### Cell 10: Hardware-Accelerated Training (AMP)
+*   **Automatic Mixed Precision (AMP):** Utilizes `torch.cuda.amp.GradScaler` and `autocast`.
+*   **Execution Efficiency:** Dynamically casts specific tensor operations to lower-precision floats (FP16), vastly accelerating matrix multiplications on modern GPUs while preserving FP32 precision for sensitive gradient updates.
+
+### Cell 11: ONNX Model Export
+*   **Model Serialization:** Exports the fine-tuned, optimal PyTorch model to the Open Neural Network Exchange (`.onnx`) format via `torch.onnx.export`.
+*   **System Interoperability:** Decouples the underlying model weights from the PyTorch ecosystem, allowing it to be natively ingested by cross-platform inference engines.
+
+### Cell 12: OpenVINO Edge Deployment
+*   **Intel OpenVINO Core:** Initializes the OpenVINO hardware-aware runtime environment.
+*   **Model Compilation:** Loads and compiles the serialized `.onnx` model (`core.compile_model`), specifically optimizing its graph for the target hardware architecture (e.g., CPU, integrated GPU).
+*   **Clinical Application:** Demonstrates the final phase: deploying a computationally heavy genomic model for ultra-low latency, localized inference on edge devices (simulating real-world clinical or laboratory settings).
